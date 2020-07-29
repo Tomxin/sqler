@@ -6,6 +6,7 @@ import com.tot.query.OrderBy;
 import com.tot.query.Where;
 import com.tot.query.ext.Criteria;
 import com.tot.query.ext.CriteriaGroup;
+import com.tot.query.ext.WhereHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,8 @@ import java.util.List;
  *  4. 时间要求：3日内
  */
 public class Demo {
+
+    private WhereHandler whereHandler = new WhereHandler();
 
      public <T> List<T> query(List<T> data, Where where, OrderBy orderBy, GroupBy groupBy, Limit limit) {
          //你的代码实现。。。
@@ -81,6 +84,7 @@ public class Demo {
      * @return
      */
     private <T> List<T> group(List<T> data, GroupBy groupBy) {
+
         return data;
     }
 
@@ -96,8 +100,10 @@ public class Demo {
         List<T> rstList = new ArrayList<>();
         for (T row  : dataList) {
             // 过滤处理
-            boolean match = where.isMatch(row);
-            rstList.add(row);
+            boolean match = whereHandler.isMatch(row,where);
+            if (match) {
+                rstList.add(row);
+            }
         }
         return rstList;
     }
