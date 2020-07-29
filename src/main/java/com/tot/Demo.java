@@ -1,0 +1,104 @@
+package com.tot;
+
+import com.tot.query.GroupBy;
+import com.tot.query.Limit;
+import com.tot.query.OrderBy;
+import com.tot.query.Where;
+import com.tot.query.ext.Criteria;
+import com.tot.query.ext.CriteriaGroup;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 数学上的与非运算-参考资料：
+ * https://wenku.baidu.com/view/d30c60bb185f312b3169a45177232f60ddcce72f.html
+ *
+ * 用Java实现一个类似SQL查询的服务，参数模型自己设计：
+ *  入参：
+ *   - 类比某张表内全量数据
+ *   - 过滤条件，支持多个，与/或
+ *   - 排序，支持多个，以及升序倒序
+ *   - 分组，支持多个
+ *   - 最大返回结果数
+ *  返回：
+ *   - 查询结果
+ *
+ * 大概这样：
+ *
+ *     List<Object> query(List<Object> data, Where where, OrderBy orderBy, GroupBy groupBy, Limit limit) {
+ *         //你的代码实现。。。
+ *     }
+ *
+ *
+ * 作业要求：
+ *  1. 在个人github上新建一个工程，完成后提交该项目的URL
+ *  2. 需要包含测试代码
+ *  3. 自由发挥，重点展现自己代码功底，包括不限于 可读性/可测性/可维护性/性能等等。有些细节如果时间紧张可以封装甚至MOCK掉。
+ *  4. 时间要求：3日内
+ */
+public class Demo {
+
+     public <T> List<T> query(List<T> data, Where where, OrderBy orderBy, GroupBy groupBy, Limit limit) {
+         //你的代码实现。。。
+         assert data != null;
+         if (data.size() == 0) {
+             return data;
+         }
+         data = whereFilter(data,where);
+         data = group(data,groupBy);
+         data = order(data,orderBy);
+         return limit(data,limit);
+     }
+
+    /**
+     * limit 处理
+     * @param data
+     * @param limit
+     * @param <T>
+     * @return
+     */
+    private <T> List<T> limit(List<T> data, Limit limit) {
+        return data;
+    }
+
+    /**
+     * 排序处理
+     * @param data
+     * @param orderBy
+     * @param <T>
+     * @return
+     */
+    private <T> List<T> order(List<T> data, OrderBy orderBy) {
+        return data;
+    }
+
+    /**
+     * 分组处理
+     * @param data
+     * @param groupBy
+     * @param <T>
+     * @return
+     */
+    private <T> List<T> group(List<T> data, GroupBy groupBy) {
+        return data;
+    }
+
+    /**
+     * 条件过滤。由于数据是用户通过接口传递，因此这里没有必要加索引，直接遍历就行了
+     * @param dataList
+     * @param where
+     * @param <T>
+     * @return
+     */
+    private <T> List<T> whereFilter(List<T> dataList, Where where) {
+        //
+        List<T> rstList = new ArrayList<>();
+        for (T row  : dataList) {
+            // 过滤处理
+            boolean match = where.isMatch(row);
+            rstList.add(row);
+        }
+        return rstList;
+    }
+}
