@@ -7,27 +7,37 @@ public class Limit {
     /**
      * limit from index
      */
-    private int from;
+    private Integer from;
     /**
      * max result count
      */
-    private int count;
+    private Integer count;
 
     // get and set
 
-    public int getFrom() {
+    public Integer getFrom() {
         return from;
     }
 
-    public void setFrom(int from) {
+    public void setFrom(Integer from) {
         this.from = from;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
+    }
+
+
+    public void check(){
+        if (from != null && from < 0) {
+            throw new IllegalStateException("from不能小于0");
+        }
+        if(count != null && count <1){
+            throw new IllegalStateException("from不能小于1");
+        }
     }
 }

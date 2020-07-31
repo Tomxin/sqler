@@ -1,6 +1,6 @@
 package com.tot.query;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * group 限制
@@ -10,13 +10,13 @@ public class GroupBy {
     /**
      * group by 列定义，可以多个
      */
-    private List<String> cols;
+    private Set<String> cols;
 
-    public List<String> getCols() {
+    public Set<String> getCols() {
         return cols;
     }
 
-    public void setCols(List<String> cols) {
+    public void setCols(Set<String> cols) {
         this.cols = cols;
     }
 }

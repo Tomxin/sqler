@@ -4,14 +4,9 @@ import com.tot.data.DemoData2;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.junit.Assert.*;
 
 public class FieldUtilTest {
 

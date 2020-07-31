@@ -9,16 +9,7 @@ public class DemoData1 {
 
     private Double  price;
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
     private LocalDateTime createTime;
-
 
     public Long getId() {
         return id;
@@ -42,6 +33,14 @@ public class DemoData1 {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
 }

@@ -4,12 +4,11 @@ import com.tot.query.GroupBy;
 import com.tot.query.Limit;
 import com.tot.query.OrderBy;
 import com.tot.query.Where;
-import com.tot.query.ext.Criteria;
-import com.tot.query.ext.CriteriaGroup;
 import com.tot.query.ext.WhereHandler;
+import com.tot.util.FieldUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 数学上的与非运算-参考资料：
@@ -38,9 +37,9 @@ import java.util.List;
  *  3. 自由发挥，重点展现自己代码功底，包括不限于 可读性/可测性/可维护性/性能等等。有些细节如果时间紧张可以封装甚至MOCK掉。
  *  4. 时间要求：3日内
  */
-public class Demo {
+public class SqlLikeQuery {
 
-    private WhereHandler whereHandler = new WhereHandler();
+    private final WhereHandler whereHandler = new WhereHandler();
 
      public <T> List<T> query(List<T> data, Where where, OrderBy orderBy, GroupBy groupBy, Limit limit) {
          //你的代码实现。。。
@@ -62,7 +61,27 @@ public class Demo {
      * @return
      */
     private <T> List<T> limit(List<T> data, Limit limit) {
-        return data;
+        if (limit == null) {
+            return data;
+        }
+        limit.check();
+        int dataSize = data.size();
+        if (dataSize == 0) {
+            return data;
+        }
+        int from = 0;
+        int end = dataSize;
+        if(limit.getFrom() != null){
+            if(limit.getFrom() >= dataSize ){
+                return new ArrayList<>();
+            } else {
+                from = limit.getFrom();
+            }
+        }
+        if(limit.getCount() != null){
+            end = Math.min(end,from + limit.getCount());
+        }
+        return data.subList(from,end);
     }
 
     /**
@@ -73,6 +92,26 @@ public class Demo {
      * @return
      */
     private <T> List<T> order(List<T> data, OrderBy orderBy) {
+        if (orderBy == null  || orderBy.getBy() == null || orderBy.getBy().size() == 0) {
+            return data;
+        }
+        data.sort((v1,v2)->{
+            int rst = 0;
+            for (OrderBy.OrderItem orderItem : orderBy.getBy()) {
+                String colName = orderItem.getColName();
+                Object colV1 = FieldUtil.getFieldValueByName(colName, v1);
+                if(!(colV1 instanceof Comparable)){
+                    throw new IllegalStateException(String.format("col[%s] must be Comparable",colName));
+                }
+                Object colV2 = FieldUtil.getFieldValueByName(colName, v2);
+                rst = ((Comparable) colV1).compareTo(colV2);
+                if(rst != 0 ){
+                    return rst;
+                }
+
+            }
+            return rst;
+        });
         return data;
     }
 
@@ -84,8 +123,20 @@ public class Demo {
      * @return
      */
     private <T> List<T> group(List<T> data, GroupBy groupBy) {
+        if (groupBy.getCols() == null || groupBy.getCols().size() == 0) {
+            return data;
+        }
+        // linkedMap记录插入顺序
 
-        return data;
+        Map<List<Object>, T> groupMap = new LinkedHashMap<>();
+        for (T row : data) {
+            List<Object> identifyKey = groupBy.getCols().stream().map(v->{
+                Object fValue = FieldUtil.getFieldValueByName(v, row);
+                return fValue == null ? "NONE":fValue;
+            }).collect(Collectors.toList());
+            groupMap.putIfAbsent(identifyKey, row);
+        }
+        return new ArrayList<>(groupMap.values());
     }
 
     /**

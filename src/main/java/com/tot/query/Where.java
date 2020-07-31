@@ -13,6 +13,9 @@ public class Where {
         return new Where();
     }
 
+    private Where() {
+    }
+
     public CriteriaGroup init(){
         CriteriaGroup instance = CriteriaGroup.instance(CriteriaGroup.LogicEnum.AND);
         criteriaGroups.add(instance);
