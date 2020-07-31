@@ -43,6 +43,7 @@ public class WhereHandler {
             }
             if (match == null) {
                 match = dataGroupMatch(data,criteriaGroup);
+                continue;
             }
             if (CriteriaGroup.LogicEnum.OR.equals(criteriaGroup.getGroupType())) {
                 if(match){

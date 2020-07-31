@@ -43,4 +43,13 @@ public class DemoData1 {
         this.createTime = createTime;
     }
 
+    @Override
+    public String toString() {
+        return "DemoData1{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

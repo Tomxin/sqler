@@ -104,9 +104,13 @@ public class SqlLikeQuery {
                     throw new IllegalStateException(String.format("col[%s] must be Comparable",colName));
                 }
                 Object colV2 = FieldUtil.getFieldValueByName(colName, v2);
-                rst = ((Comparable) colV1).compareTo(colV2);
+                if(orderItem.getType().equals(OrderBy.OrderType.ASC)){
+                    rst = ((Comparable) colV1).compareTo(colV2);
+                } else {
+                    rst = 0 - ((Comparable) colV1).compareTo(colV2);
+                }
                 if(rst != 0 ){
-                    return rst;
+                   return rst;
                 }
 
             }
@@ -147,6 +151,9 @@ public class SqlLikeQuery {
      * @return
      */
     private <T> List<T> whereFilter(List<T> dataList, Where where) {
+        if (where == null || where.getCriteriaGroups() == null || where.getCriteriaGroups().size() == 0) {
+            return dataList;
+        }
         //
         List<T> rstList = new ArrayList<>();
         for (T row  : dataList) {

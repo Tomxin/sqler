@@ -11,7 +11,7 @@ public class EqualCriteriaMatcher implements CriteriaMatcher {
     @Override
     public boolean match(Object data, Criteria<Object> criteria) {
         Object fieldData = FieldUtil.getFieldValueByName(criteria.getFieldName(), data);
-        return Objects.equals(fieldData,criteria);
+        return Objects.equals(fieldData,criteria.getValue());
     }
 
 }

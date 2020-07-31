@@ -13,7 +13,8 @@ public class LikeCriteriaMatcher implements CriteriaMatcher {
         if (fieldData instanceof String) {
             // todo 暂未实现 %% 相关匹配
             String likeEx = criteria.getValue().toString();
-            return fieldData.toString().contains(likeEx);
+            String contrainStr = likeEx.replace("%","");
+            return fieldData.toString().contains(contrainStr);
         } else {
             throw new IllegalArgumentException("Like only support Field Type:String");
         }

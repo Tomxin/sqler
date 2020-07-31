@@ -13,7 +13,7 @@ public class GreaterThanCriteriaMatcher implements CriteriaMatcher {
         if (!(fieldData instanceof Comparable)) {
             throw new IllegalArgumentException("GT only support Comparable Field");
         }
-        return ((Comparable) fieldData).compareTo(criteria.getOperator()) > 0;
+        return ((Comparable) fieldData).compareTo(criteria.getValue()) > 0;
     }
 
 
