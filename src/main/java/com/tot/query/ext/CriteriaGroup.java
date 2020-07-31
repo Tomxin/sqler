@@ -13,7 +13,7 @@ import java.util.List;
 public class CriteriaGroup {
 
     public enum Operator {
-        EQ, NOT_EQ, LIKE, NOT_LIKE, GT, LT, GTE, LTE, IS_NULL, NOT_NOLL, IN, NOT_IN, BETWEEN;
+        EQ, NOT_EQ, LIKE, NOT_LIKE, GT, LT, GTE, LTE, IS_NULL, NOT_NULL, IN, NOT_IN;
     }
     public enum LogicEnum {
         AND,
@@ -61,27 +61,6 @@ public class CriteriaGroup {
         return this;
     }
 
-    private <V> CriteriaGroup andCriteria(Operator op, String fieldName, V value, AcceptDecision<V> acceptDecision) {
-        if(value == null) {
-            return this;
-        }
-        if (!acceptDecision.accept(value)) {
-            return this;
-        }
-        criteriaList.add(Criteria.andCriteria(op, fieldName, value));
-        return this;
-    }
-
-    private <V>CriteriaGroup orCriteria(Operator op, String fieldName, V value, AcceptDecision<V> acceptDecision) {
-        if(value == null) {
-            return this;
-        }
-        if (!acceptDecision.accept(value)) {
-            return this;
-        }
-        criteriaList.add(Criteria.orCriteria(op, fieldName, value));
-        return this;
-    }
 
 
     // --------------------------and-logic criteria---------------------------------------------------//
@@ -144,7 +123,7 @@ public class CriteriaGroup {
     }
 
     public CriteriaGroup andNotNull(String fieldName) {
-        return andCriteria(Operator.NOT_NOLL, fieldName, NULL);
+        return andCriteria(Operator.NOT_NULL, fieldName, NULL);
     }
 
     public <V extends Collection> CriteriaGroup andIn(String fieldName, V values) {
@@ -161,9 +140,6 @@ public class CriteriaGroup {
         return andCriteria(Operator.NOT_IN, fieldName, values);
     }
 
-    public CriteriaGroup andBetween(String fieldName, BetweenBean value) {
-        return andCriteria(Operator.BETWEEN, fieldName, value);
-    }
 
 
     //--------------------------------OR-OPERATION----------------------------------------------//
@@ -219,7 +195,7 @@ public class CriteriaGroup {
     }
 
     public CriteriaGroup orIsNotNull(String fieldName) {
-        return orCriteria(Operator.NOT_NOLL, fieldName, NULL);
+        return orCriteria(Operator.NOT_NULL, fieldName, NULL);
     }
 
     public <V extends Collection> CriteriaGroup orIsIn(String fieldName, V values) {
@@ -238,140 +214,11 @@ public class CriteriaGroup {
 
     }
 
-    public CriteriaGroup orBetween(String fieldName, BetweenBean value) {
-
-        return orCriteria(Operator.BETWEEN, fieldName, value);
-    }
-
-
-    //-------------------------------lambda------------------------------------------//
-
-    // --------------------------and-logic criteria---------------------------------------------------//
-
-    public <V>CriteriaGroup andEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return andCriteria(Operator.EQ, fieldName, value,acceptDecision);
-    }
-
-    public <V>CriteriaGroup andNotEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return andCriteria(Operator.NOT_EQ, fieldName, value , acceptDecision);
-
-    }
-
-    public CriteriaGroup andLike(String fieldName, String value,AcceptDecision<String> acceptDecision) {
-
-        return andCriteria(Operator.LIKE, fieldName, handleLikeString(value) , acceptDecision);
-    }
-
-    public CriteriaGroup andNotLike(String fieldName, String value,AcceptDecision<String> acceptDecision) {
-
-        return andCriteria(Operator.NOT_LIKE, fieldName, handleLikeString(value) , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup andGreaterThan(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return andCriteria(Operator.GT, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup andGreaterThanOrEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return andCriteria(Operator.GTE, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup andLessThan(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return andCriteria(Operator.LT, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup andLessThanOrEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return andCriteria(Operator.LTE, fieldName, value , acceptDecision);
-    }
-
-    public CriteriaGroup andIsNull(String fieldName,AcceptDecision acceptDecision) {
-        return andCriteria(Operator.IS_NULL, fieldName, NULL,acceptDecision);
-    }
-
-    public CriteriaGroup andNotNull(String fieldName ,AcceptDecision acceptDecision ) {
-        return andCriteria(Operator.NOT_NOLL, fieldName, NULL ,acceptDecision);
-    }
-
-
-    public <V extends Collection> CriteriaGroup andIn(String fieldName, V values,AcceptDecision<V> acceptDecision) {
-        if (values == null || values.size() == 0) {
-            return this;
-        }
-        return andCriteria(Operator.IN, fieldName, values , acceptDecision);
-    }
-
-    public <V extends Collection> CriteriaGroup andNotIn(String fieldName, V values,AcceptDecision<V> acceptDecision) {
-        if (values == null || values.size() == 0) {
-            return this;
-        }
-        return andCriteria(Operator.NOT_IN, fieldName, values , acceptDecision);
-    }
 
 
 
     //--------------------------------OR-OPERATION----------------------------------------------//
     // or-logic criteria
-
-    public <V>CriteriaGroup orEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-        return orCriteria(Operator.EQ, fieldName, value , acceptDecision);
-    }
-
-    public <V>CriteriaGroup orNotEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return orCriteria(Operator.NOT_EQ, fieldName, value , acceptDecision);
-
-    }
-
-
-    public <V extends Comparable>CriteriaGroup orGreaterThan(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return orCriteria(Operator.GT, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup orGreaterThanOrEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return orCriteria(Operator.GTE, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup orLessThan(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return orCriteria(Operator.LT, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Comparable>CriteriaGroup orLessThanOrEqual(String fieldName, V value,AcceptDecision<V> acceptDecision) {
-
-        return orCriteria(Operator.LTE, fieldName, value , acceptDecision);
-    }
-
-    public <V extends Collection> CriteriaGroup orIsIn(String fieldName, V values,AcceptDecision<V> acceptDecision) {
-        if (values == null || values.size() == 0) {
-            return this;
-        }
-        return orCriteria(Operator.IN, fieldName, values , acceptDecision);
-    }
-
-    public <V extends Collection>CriteriaGroup orIsNotIn(String fieldName, V values,AcceptDecision<V> acceptDecision) {
-
-        if (values == null || values.size() == 0) {
-            return this;
-        }
-        return orCriteria(Operator.NOT_IN, fieldName, values , acceptDecision);
-
-    }
-
-
-    public CriteriaGroup orIsNull(String fieldName,AcceptDecision acceptDecision) {
-        return orCriteria(Operator.IS_NULL, fieldName, NULL ,acceptDecision);
-    }
-
-    public CriteriaGroup orIsNotNull(String fieldName , AcceptDecision acceptDecision) {
-        return orCriteria(Operator.NOT_NOLL, fieldName, NULL ,acceptDecision);
-    }
 
     static boolean isBlank(String str){
         return str == null || "".equals(str.trim());

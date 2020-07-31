@@ -29,4 +29,13 @@ public class FieldUtil {
             throw new IllegalStateException(String.format("属性【%s】不存在", fieldName));
         }
     }
+
+    public static Class getFieldClassByName(String fieldName, Object o) {
+        try {
+            Field field = o.getClass().getField(fieldName);
+            return field.getType();
+        } catch (Exception e) {
+            throw new IllegalStateException(String.format("属性【%s】不存在", fieldName));
+        }
+    }
 }

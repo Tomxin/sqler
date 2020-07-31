@@ -123,7 +123,7 @@ public class SqlLikeQuery {
      * @return
      */
     private <T> List<T> group(List<T> data, GroupBy groupBy) {
-        if (groupBy.getCols() == null || groupBy.getCols().size() == 0) {
+        if (groupBy == null || groupBy.getCols() == null || groupBy.getCols().size() == 0) {
             return data;
         }
         // linkedMap记录插入顺序

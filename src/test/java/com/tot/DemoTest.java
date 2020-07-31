@@ -2,6 +2,7 @@ package com.tot;
 
 import com.tot.data.DemoData1;
 import com.tot.query.Where;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -11,14 +12,21 @@ import java.util.List;
 public class DemoTest {
 
     @Test
-    public void query() {
+    public void testGroupCriteria() {
         SqlLikeQuery demo = new SqlLikeQuery();
         Where where = Where.newInstance();
         where.init()
             .andEqual("id",2L);
-
-        List<DemoData1> query = demo.query(testData(), where, null, null, null);
-        System.out.print(query);
+        // id = 3 and id = 2 or id=2 or id=3 and id=2
+        where.andGroup()
+                .andEqual("id",3L)
+                .andEqual("id",2L)
+                .orEqual("id",2)
+                .orEqual("id",3L)
+                .andEqual("id",2L);
+        List<DemoData1> rst = demo.query(testData(), where, null, null, null);
+        System.out.println(rst);
+        Assert.assertEquals(0,rst.size());
 
     }
 
